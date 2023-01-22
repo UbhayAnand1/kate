@@ -35,24 +35,15 @@ class KateKonsolePlugin : public KTextEditor::Plugin
     friend class KateKonsolePluginView;
 
 public:
-    explicit KateKonsolePlugin(QObject *parent = nullptr, const QList<QVariant> & = QList<QVariant>());
+    explicit KateKonsolePlugin(QObject *parent = nullptr);
     ~KateKonsolePlugin() override;
 
     QObject *createView(KTextEditor::MainWindow *mainWindow) override;
 
-    int configPages() const override
-    {
-        return 1;
-    }
-    KTextEditor::ConfigPage *configPage(int number = 0, QWidget *parent = nullptr) override;
-
     void readConfig();
 
-    QByteArray previousEditorEnv()
-    {
-        return m_previousEditorEnv;
-    }
-
+    QByteArray previousEditorEnv() const { return m_previousEditorEnv; }
+    
 private:
     QList<KateKonsolePluginView *> mViews;
     QByteArray m_previousEditorEnv;
@@ -95,7 +86,7 @@ public:
      * @param mw main window
      * @param parent toolview
      */
-    KateConsole(KateKonsolePlugin *plugin, KTextEditor::MainWindow *mw, QWidget *parent);
+    KateConsole(KateKonsolePlugin *plugin, KTextEditor::MainWindow *mainWindow, QWidget *parent);
 
     /**
      * destruct us
@@ -116,12 +107,15 @@ public:
      */
     void sendInput(const QString &text);
 
-    KTextEditor::MainWindow *mainWindow()
-    {
-        return m_mw;
+    KTextEditor::MainWindow *mainWindow() 
+    { 
+    return m_mainWindow; 
     }
 
     bool eventFilter(QObject *w, QEvent *e) override;
+    
+private:
+    KTextEditor::MainWindow *m_mainWindow;
 
 public Q_SLOTS:
     /**
